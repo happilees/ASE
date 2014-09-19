@@ -21,7 +21,7 @@
 /*
  * Revision log : add function of "exit"
  *
- * Coding by Lixiaolin, 2014/09/14
+ * Coding by Lixiaolin, 2014/09/12
  *
  */
 
