@@ -1,6 +1,4 @@
 [1]     Coding By HappiLees
 
-[2]     Please open this RAW by IE Browser 
-
-![image](http://*.jpg)
+[2]     Please open this RAW by IE Browser
 
