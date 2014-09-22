@@ -1,82 +1,78 @@
+/**************************************************************************************************/
+/*  Copyright (C) mc2lab.com, SSE@USTC, 2014-2015                                                 */
+/*                                                                                                */
+/*  FILE NAME             :  menu.h                                                               */
+/*  PRINCIPAL AUTHOR      :  Lixiaolin                                                            */
+/*  SUBSYSTEM NAME        :  ASE-E2                                                               */
+/*  MODULE NAME           :  menu                                                                 */
+/*  LANGUAGE              :  C                                                                    */
+/*  TARGET ENVIRONMENT    :  Linux                                                                */
+/*  DATE OF FIRST RELEASE :  2014/09/21                                                           */
+/*  DESCRIPTION           :  This is a linktable.h                                                */
+/**************************************************************************************************/
 
-/********************************************************************/
-/* Copyright (C) SSE-USTC, 2012-2013                                */
-/*                                                                  */
-/*  FILE NAME             :  linktabe.h                             */
-/*  PRINCIPAL AUTHOR      :  Mengning                               */
-/*  SUBSYSTEM NAME        :  LinkTable                              */
-/*  MODULE NAME           :  LinkTable                              */
-/*  LANGUAGE              :  C                                      */
-/*  TARGET ENVIRONMENT    :  ANY                                    */
-/*  DATE OF FIRST RELEASE :  2012/12/30                             */
-/*  DESCRIPTION           :  interface of Link Table                */
-/********************************************************************/
+/**************************************************************************************************/
+/*                                                                                                */
+/*                              Please open the RAW by IE Browser                                 */
+/*                                                                                                */
+/**************************************************************************************************/
 
 /*
- * Revision log:
+ * Revision log : 
  *
- * Created by Mengning,2012/12/30
+ * Coding by Lixiaolin, 2014/09/21
  *
  */
 
-#ifndef _LINK_TABLE_H_
-#define _LINK_TABLE_H_
-
-#include <pthread.h>
-
-#define SUCCESS 0
-#define FAILURE (-1)
-
 /*
- * LinkTable Node Type
+ * linked list node struct
  */
-typedef struct LinkTableNode
+typedef struct LinkNode
 {
-	struct LinkTableNode * pNext;
-}tLinkTableNode;
+    struct LinkNode *pNext;
+} tLinkNode;
 
 /*
- * LinkTable Type
+ * linked list table struct
  */
 typedef struct LinkTable
 {
-	tLinkTableNode *pHead;
-	tLinkTableNode *pTail;
-	int			SumOfNode;
-	pthread_mutex_t mutex;
-	
-}tLinkTable;
+    tLinkNode *pHead;
+    tLinkNode *pTail;
+    int linkNodeSize;
+} tLinkTable;
 
 /*
- * Create a LinkTable
+ * create a linked list table
  */
-tLinkTable * CreateLinkTable();
+tLinkTable* CreateLinkTable();
+
 /*
- * Delete a LinkTable
+ * delete the linked list table
  */
 int DeleteLinkTable(tLinkTable *pLinkTable);
-/*
- * Add a LinkTableNode to LinkTable
- */
-int AddLinkTableNode(tLinkTable *pLinkTable,tLinkTableNode * pNode);
-/*
- * Delete a LinkTableNode from LinkTable
- */
-int DelLinkTableNode(tLinkTable *pLinkTable,tLinkTableNode * pNode);
-/*
- * Search a LinkTableNode from LinkTable
- * int Conditon(tLinkTableNode * pNode);
- */
-tLinkTableNode * SearchLinkTableNode(tLinkTable *pLinkTable, int Conditon(tLinkTableNode * pNode));
-/*
- * get LinkTableHead
- */
-tLinkTableNode * GetLinkTableHead(tLinkTable *pLinkTable);
-/*
- * get next LinkTableNode
- */
-tLinkTableNode * GetNextLinkTableNode(tLinkTable *pLinkTable,tLinkTableNode * pNode);
 
-#endif /* _LINK_TABLE_H_ */
+/*
+ * add a node into linked list
+ */
+int AddLinkNode(tLinkTable *pLinkTable, tLinkNode *pNode);
 
+/*
+ * delete a node in linked list
+ */
+int DeleteLinkNode(tLinkTable *pLinkTable, tLinkNode *pNode);
 
+/*
+ * search a linked list node with condition
+ */
+tLinkNode* SearchLinkNode(tLinkTable *pLinkTable, int Condition(tLinkNode *pNode));
+
+/*
+ * get next linked list node
+ */
+tLinkNode* GetNextLinkNode(tLinkTable *pLinkTable, tLinkNode *pNode);
+
+/*
+ * get first node in linked list table
+ */
+tLinkNode* GetLinkTableFirst(tLinkTable *pLinkTable);

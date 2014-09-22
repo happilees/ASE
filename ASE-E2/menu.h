@@ -8,7 +8,7 @@
 /*  LANGUAGE              :  C                                                                    */
 /*  TARGET ENVIRONMENT    :  Linux                                                                */
 /*  DATE OF FIRST RELEASE :  2014/09/21                                                           */
-/*  DESCRIPTION           :  This is a menu program                                               */
+/*  DESCRIPTION           :  This is a menu.h                                                     */
 /**************************************************************************************************/
 
 /**************************************************************************************************/
@@ -17,7 +17,6 @@
 /*                                                                                                */
 /**************************************************************************************************/
 
-
 /*
  * Revision log : 
  *
@@ -25,37 +24,47 @@
  *
  */
 
-#define CMD_MAX_LEN 128
-#define DESC_LEN    1024
-#define CMD_NUM     10
+/*
+ * command node struct
+ */
+typedef struct CmdNode tCmdNode;
 
-typedef struct DataNode
-{
-    char*   cmd;
-    char*   desc;
-    struct  DataNode *next;
-} tDataNode;
+/*
+ * menu struct
+ */
+typedef struct Menu tMenu;
 
-/* show all the command */
-int ShowAllCmd();
+/*
+ * create a menu
+ */
+tMenu* CreateMenu();
 
-/* show the help list */
-int HelpCmd();
+/*
+ * add a command into menu
+ */
+int AddCommand(tMenu *pMenu, char* pCommand, char* pDesc, int (*pOpt)());
 
-/* show the information of writer */
-int WriterCmd();
+/*
+ * print all commands and their functions on screen
+ */
+int ShowAllInfo(tMenu *pMenu);
 
-/* show the version of this program*/
-int VersionCmd();
+/*
+ * start the menu program
+ */
+int MenuStart(tMenu *Menu);
 
-/* if user input a wrong command, show this */
-int WrongCmd();
+/*
+ * stop the menu program
+ */
+int MenuStop(tMenu *pMenu);
 
-/* exit this program */
-int ExitCmd();
+/*
+ * delete command named pCommand
+ */
+int DeleteCommand(tMenu *pMenu, char* pCommand);
 
-
-
-
-
-
+/*
+ * delete menu
+ */
+int DeleteMenu(tMenu *pMenu);

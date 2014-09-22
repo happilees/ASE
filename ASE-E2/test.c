@@ -4,7 +4,7 @@
 /*  FILE NAME             :  test.c                                                               */
 /*  PRINCIPAL AUTHOR      :  Lixiaolin                                                            */
 /*  SUBSYSTEM NAME        :  ASE-E2                                                               */
-/*  MODULE NAME           :  test                                                                 */
+/*  MODULE NAME           :  menu                                                                 */
 /*  LANGUAGE              :  C                                                                    */
 /*  TARGET ENVIRONMENT    :  Linux                                                                */
 /*  DATE OF FIRST RELEASE :  2014/09/21                                                           */
@@ -25,47 +25,44 @@
  */
 
 #include <stdio.h>
-
+#include <stdlib.h>
 #include "menu.h"
 
-main()
-{
-    /* show all command at the begin of this program */
-    ShowAllCmd();
+int VersionInfo(tMenu *pMenu);
+int WriterInfo(tMenu *pMenu);
 
-    while(1)
-    {
-        /* get a command */
-        char cmdin[CMD_MAX_LEN];
-        printf("Please input a cmd ---> ");
-        scanf("%s", cmdin);
-        
-        /* distinguish the command */
-        if(!strcmp("help", cmdin))
-        {
-            HelpCmd();
-        }
-        else if(!strcmp("exit", cmdin))
-        { 
-            ExitCmd();
-        }
-        else if(!strcmp("writer", cmdin))
-        {
-            WriterCmd();
-        }
-        else if(!strcmp("version", cmdin))
-        {
-            VersionCmd();
-        }
-        else
-        {
-            WrongCmd();
-        }
-    }
+int main()
+{
+    tMenu *pMenu = CreateMenu();
+    
+    AddCommand(pMenu, "help", "Show all the command can be used", ShowAllInfo);
+    AddCommand(pMenu, "writer", "Show the information of writer", WriterInfo);
+    AddCommand(pMenu, "version", "Show the version of this program", VersionInfo);
+    AddCommand(pMenu, "exit", "Exit this program", MenuStop);
+    
+    MenuStart(pMenu);
+    
+    DeleteCommand(pMenu, "version");
+    
+    MenuStart(pMenu);
+    
+    DeleteMenu(pMenu);
+    
+    return 0;
 }
 
+int VersionInfo(tMenu *pMenu)
+{
+    printf("\n\033[40;32mThis is menu program V1.0\033[5m\n");
+    printf("\033[40;37m\033[5m");
+    return 0;
+}
 
-
-
+int WriterInfo(tMenu *pMenu)
+{
+    printf("\n\033[40;32mThis code write by Lixiaolin\033[5m\n");
+    printf("\033[40;37m\033[5m");
+    return 0;
+}
 
 

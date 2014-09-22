@@ -1,192 +1,189 @@
+/**************************************************************************************************/
+/*  Copyright (C) mc2lab.com, SSE@USTC, 2014-2015                                                 */
+/*                                                                                                */
+/*  FILE NAME             :  linktable.c                                                          */
+/*  PRINCIPAL AUTHOR      :  Lixiaolin                                                            */
+/*  SUBSYSTEM NAME        :  ASE-E2                                                               */
+/*  MODULE NAME           :  menu                                                                 */
+/*  LANGUAGE              :  C                                                                    */
+/*  TARGET ENVIRONMENT    :  Linux                                                                */
+/*  DATE OF FIRST RELEASE :  2014/09/21                                                           */
+/*  DESCRIPTION           :  This is a linktable.c program                                        */
+/**************************************************************************************************/
 
-/********************************************************************/
-/* Copyright (C) SSE-USTC, 2012-2013                                */
-/*                                                                  */
-/*  FILE NAME             :  linktabe.c                             */
-/*  PRINCIPAL AUTHOR      :  Mengning                               */
-/*  SUBSYSTEM NAME        :  LinkTable                              */
-/*  MODULE NAME           :  LinkTable                              */
-/*  LANGUAGE              :  C                                      */
-/*  TARGET ENVIRONMENT    :  ANY                                    */
-/*  DATE OF FIRST RELEASE :  2012/12/30                             */
-/*  DESCRIPTION           :  interface of Link Table                */
-/********************************************************************/
+/**************************************************************************************************/
+/*                                                                                                */
+/*                              Please open the RAW by IE Browser                                 */
+/*                                                                                                */
+/**************************************************************************************************/
+
 
 /*
- * Revision log:
+ * Revision log : 
  *
- * Created by Mengning,2012/12/30
- * Provide right Callback interface by Mengning,2012/09/17
+ * Coding by Lixiaolin, 2014/09/21
  *
  */
 
-#include<stdio.h>
-#include<stdlib.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include "linktable.h"
 
-#include"linktable.h"
-
-/*
- * Create a LinkTable
- */
-tLinkTable * CreateLinkTable()
+/*create a linked list table*/
+tLinkTable* CreateLinkTable()
 {
-	tLinkTable * pLinkTable = (tLinkTable *)malloc(sizeof(tLinkTable));
-	if(pLinkTable == NULL)
-	{
-		return NULL;
+    tLinkTable *pLinkTable = (tLinkTable*)malloc(sizeof(tLinkTable));
+    if(pLinkTable == NULL)
+    {
+        return NULL;
     }
-	pLinkTable->pHead = NULL;
-	pLinkTable->pTail = NULL;
-	pLinkTable->SumOfNode = 0;
-	pthread_mutex_init(&(pLinkTable->mutex), NULL);
-	return pLinkTable;
+    tLinkNode *pHeadNode = (tLinkNode*)malloc(sizeof(tLinkNode));
+    pHeadNode->pNext = NULL;
+    pLinkTable->pHead = pHeadNode;
+    pLinkTable->pTail = pHeadNode;
+    pLinkTable->linkNodeSize = 0;
+    return pLinkTable;
 }
-/*
- * Delete a LinkTable
- */
+
+/*delete the linked list table*/
 int DeleteLinkTable(tLinkTable *pLinkTable)
 {
-	if(pLinkTable == NULL)
-	{
-		return FAILURE;
-    }
-	while(pLinkTable->pHead != NULL)
-	{
-		tLinkTableNode * p = pLinkTable->pHead;
-		pthread_mutex_lock(&(pLinkTable->mutex));
-		pLinkTable->pHead = pLinkTable->pHead->pNext;
-		pLinkTable->SumOfNode -= 1 ;
-		pthread_mutex_unlock(&(pLinkTable->mutex));
-		free(p);
-	}
-	pLinkTable->pHead = NULL;
-	pLinkTable->pTail = NULL;
-	pLinkTable->SumOfNode = 0;
-	pthread_mutex_destroy(&(pLinkTable->mutex));
-	free(pLinkTable);
-	return SUCCESS;		
-}
-/*
- * Add a LinkTableNode to LinkTable
- */
-int AddLinkTableNode(tLinkTable *pLinkTable,tLinkTableNode * pNode)
-{
-	if(pLinkTable == NULL || pNode == NULL)
-	{
-		return FAILURE;
-    }
-	pNode->pNext = NULL;
-	pthread_mutex_lock(&(pLinkTable->mutex));
-	if(pLinkTable->pHead == NULL)
-	{
-		pLinkTable->pHead = pNode;
-	}
-	if(pLinkTable->pTail == NULL)
-	{
-		pLinkTable->pTail = pNode;
-	}
-	else
-	{
-		pLinkTable->pTail->pNext = pNode;
-		pLinkTable->pTail = pNode;
-	}
-	pLinkTable->SumOfNode += 1 ;
-	pthread_mutex_unlock(&(pLinkTable->mutex));
-	return SUCCESS;		
-}
-/*
- * Delete a LinkTableNode from LinkTable
- */
-int DelLinkTableNode(tLinkTable *pLinkTable,tLinkTableNode * pNode)
-{
-	if(pLinkTable == NULL || pNode == NULL)
-	{
-		return FAILURE;
-    }
-    pthread_mutex_lock(&(pLinkTable->mutex));
-    if(pLinkTable->pHead == pNode)
+    if(pLinkTable == NULL)
     {
-        pLinkTable->pHead = pLinkTable->pHead->pNext;
-    	pLinkTable->SumOfNode -= 1 ;
-    	if(pLinkTable->SumOfNode == 0)
-    	{
-    		pLinkTable->pTail = NULL;	
-    	}
-    	pthread_mutex_unlock(&(pLinkTable->mutex));
-    	return SUCCESS;
+        printf("Error(1): The link table is not exist.\n");
+        return 1;
     }
-    tLinkTableNode * pTempNode = pLinkTable->pHead;
-	while(pTempNode != NULL)
-    {    
-		if(pTempNode->pNext == pNode)
-		{
-		    pTempNode->pNext = pTempNode->pNext->pNext;
-    		pLinkTable->SumOfNode -= 1 ;
-    		if(pLinkTable->SumOfNode == 0)
-    		{
-    			pLinkTable->pTail = NULL;	
-    		}
-    		pthread_mutex_unlock(&(pLinkTable->mutex));
-    		return SUCCESS;				    
-		}
-		pTempNode = pTempNode->pNext;
-	}
-	pthread_mutex_unlock(&(pLinkTable->mutex));
-	return FAILURE;		
+    tLinkNode *pThisNode;
+    pThisNode = pLinkTable->pHead->pNext;
+    while(pThisNode != NULL)
+    {
+        tLinkNode *pFreeNode;
+        pLinkTable->pHead->pNext = pThisNode->pNext;
+        pFreeNode = pThisNode;
+        pThisNode = pThisNode->pNext;
+        pFreeNode->pNext = NULL;
+        free(pFreeNode);
+    }
+    pLinkTable->pHead = NULL;
+    pLinkTable->pTail = NULL;
+    pLinkTable->linkNodeSize = -1;
+    free(pLinkTable);
+    return 0;
 }
 
-/*
- * Search a LinkTableNode from LinkTable
- * int Conditon(tLinkTableNode * pNode);
- */
-tLinkTableNode * SearchLinkTableNode(tLinkTable *pLinkTable, int Conditon(tLinkTableNode * pNode))
+/*add a node into linked list*/
+int AddLinkNode(tLinkTable *pLinkTable, tLinkNode *pAddNode)
 {
-    if(pLinkTable == NULL || Conditon == NULL)
-	{
-		return NULL;
+    if(pLinkTable == NULL || pAddNode == NULL)
+    {
+        printf("Error(1): The link table or node you add is not exist.\n");
+        return 1;
     }
-    tLinkTableNode * pNode = pLinkTable->pHead;
-	while(pNode != pLinkTable->pTail)
-    {    
-		if(Conditon(pNode) == SUCCESS)
-        {
-    		return pNode;				    
-		}
-		pNode = pNode->pNext;
-	}
-	return NULL;
+    if(pLinkTable->linkNodeSize == 0)
+    {
+        pLinkTable->pHead->pNext = pAddNode;
+        pAddNode->pNext = NULL;
+        pLinkTable->pTail = pAddNode;
+    }
+    else
+    {
+        pAddNode->pNext = pLinkTable->pHead->pNext;
+        pLinkTable->pHead->pNext = pAddNode;
+    }
+    pLinkTable->linkNodeSize++;
+    return 0;
 }
 
-/*
- * get LinkTableHead
- */
-tLinkTableNode * GetLinkTableHead(tLinkTable *pLinkTable)
+/*delete a node in linked list*/
+int DeleteLinkNode(tLinkTable *pLinkTable, tLinkNode *pNode)
+{
+    if(pLinkTable == NULL || pNode == NULL)
+    {
+        printf("Error(1): The link table or node you add is not exist.\n");
+        return -1;
+    }
+    tLinkNode *pThisNode;
+    tLinkNode *pBeforeNode;
+    pThisNode = pLinkTable->pHead->pNext;
+    pBeforeNode = pLinkTable->pHead;
+    while(pThisNode != NULL)
+    {
+        if(pThisNode == pNode)
+        {
+            pBeforeNode->pNext = pThisNode->pNext;
+            if(pThisNode->pNext == NULL)
+            {
+                pLinkTable->pTail = pBeforeNode;
+            }
+            pThisNode->pNext = NULL;
+            free(pThisNode);
+            pLinkTable->linkNodeSize--;
+            return 0;
+        }
+        pBeforeNode = pThisNode;
+        pThisNode = pThisNode->pNext;
+    }
+    printf("There is no match node you want to delete.\n");
+    return 1;
+}
+
+/*search a linked list node with condition*/
+tLinkNode* SearchLinkNode(tLinkTable *pLinkTable, int Condition(tLinkNode *pNode))
+{
+    if(pLinkTable == NULL || Condition == NULL)
+    {
+        printf("Error(1): The link table or node you add is not exist.\n");
+        return NULL;
+    }
+    tLinkNode *pNode = pLinkTable->pHead->pNext;
+    while(pNode != NULL)
+    {
+        if(Condition(pNode))
+        {
+            return pNode;
+        }
+        pNode = pNode->pNext;
+    }
+    return NULL;
+}
+
+/*get next linked list node*/
+tLinkNode* GetNextLinkNode(tLinkTable *pLinkTable, tLinkNode *pNode)
+{
+    if(pLinkTable == NULL || pNode == NULL)
+    {
+        printf("Error(1): The link table or node you add is not exist.\n");
+        return NULL;
+    }
+    if(pLinkTable->linkNodeSize == 0)
+    {
+        printf("Error(2): There is no node in this link table.\n");
+        return NULL;
+    }
+    tLinkNode *pThisNode;
+    pThisNode = pLinkTable->pHead->pNext;
+    while(pThisNode != NULL)
+    {
+        if(pThisNode == pNode)
+        {
+            if(pThisNode == pLinkTable->pTail)
+            {
+                return NULL;
+            }
+            return pThisNode->pNext;
+        }
+        pThisNode = pThisNode->pNext;
+    }
+    return NULL;
+}
+
+/*get first node in linked list table*/
+tLinkNode* GetLinkTableFirst(tLinkTable *pLinkTable)
 {
     if(pLinkTable == NULL)
-	{
-		return NULL;
-    }    
-	return pLinkTable->pHead;
-}
-
-/*
- * get next LinkTableNode
- */
-tLinkTableNode * GetNextLinkTableNode(tLinkTable *pLinkTable,tLinkTableNode * pNode)
-{
-	if(pLinkTable == NULL || pNode == NULL)
-	{
-		return NULL;
+    {
+        printf("Error(1): The link table is not exist.\n");
+        return NULL;
     }
-    tLinkTableNode * pTempNode = pLinkTable->pHead;
-	while(pTempNode != NULL)
-    {    
-		if(pTempNode == pNode)
-        {
-    		return pTempNode->pNext;				    
-		}
-		pTempNode = pTempNode->pNext;
-	}
-	return NULL;
+    return pLinkTable->pHead->pNext;
 }
-
