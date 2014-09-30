@@ -32,23 +32,23 @@
 
 #define CMD_MAX_LEN 128
 
-int out = 0;
-char pInputCmd[CMD_MAX_LEN];
-char* deleteCmd;
+int     out = 0;
+char    pInputCmd[CMD_MAX_LEN];
+char*   deleteCmd;
 
 /*command struct*/
 struct CmdNode
 {
-    tLinkNode *pNext;
-    char* cmd;
-    char* desc;
-    int (*fPoint)();
+    tLinkNode   *pNext;
+    char*       cmd;
+    char*       desc;
+    int         (*fPoint)();
 };
 
 /*menu struct*/
 struct Menu
 {
-    tLinkTable *pMenuHead;
+    tLinkTable* pMenuHead;
 };
 
 /*create a menu*/
