@@ -52,7 +52,7 @@ int AddCommand(tMenu *pMenu, char* pCommand, char* pDesc, int (*pOpt)())
     {
         return FAILURE;
     }
-    printf("function...\n");
+    printf("*** test for function ***\n");
     return SUCCESS;   
 }
 
@@ -63,7 +63,7 @@ int ShowAllCommand(tMenu *pMenu)
     {
         return FAILURE;
     }
-    printf("function...\n");
+    printf("*** test for function ***\n");
     return SUCCESS;   
 }
 
@@ -74,7 +74,7 @@ int ShowAllInformation(tMenu *pMenu)
     {
         return FAILURE;
     }
-    printf("function...\n");
+    printf("*** test for function ***\n");
     return SUCCESS;
 }
 
@@ -86,10 +86,11 @@ void MenuStart(tMenu *pMenu)
     {
         if(pMenu == NULL)
         {
-            printf("\nMenu start fail.\n");
+            printf("\n\033[40;31mMenu start fail.\033[5m\n\n");
+            printf("\033[40;37m\033[5m");
             break;
         }
-        printf("function...\n");
+        printf("*** test for function ***\n");
         break;
     } 
 }
@@ -101,7 +102,7 @@ int MenuStop(tMenu *pMenu)
     {
         return FAILURE;
     }
-    printf("function...\n");
+    printf("*** test for function ***\n");
     return SUCCESS;
 }
 
@@ -112,7 +113,7 @@ int DeleteCommand(tMenu *pMenu, char* pCommand)
     {
         return FAILURE;
     }
-    printf("function...\n");
+    printf("*** test for function ***\n");
     return SUCCESS;
 }
 
@@ -123,6 +124,6 @@ int DeleteMenu(tMenu *pMenu)
     {
         return FAILURE;
     }
-    printf("function...\n");
+    printf("*** test for function ***\n");
     return SUCCESS;
 }

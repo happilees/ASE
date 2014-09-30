@@ -31,10 +31,10 @@
 #define FAILURE -1
 #define SUCCESS 0
 
-int returnResult[21];
-char* result[21];
+int     returnResult[21];
+char*   result[21];
 
-char* info[23] =
+char*   info[23] =
 {
     "==================================retrun test report====================================",
     "TC1.1:   CreateMenu[]",
@@ -76,6 +76,11 @@ int main()
 
     /*test return of CreateMenu()*/
     i = 0;
+    debug("\033[33m****************************************\033[33m\033[0m\n");
+    debug("\033[33m****************************************\033[33m\033[0m\n");
+    debug("\033[33m****************************************\033[33m\033[0m\n");
+    debug("\033[33m****************************************\033[33m\033[0m\n");
+    debug("\033[33m****************************************\033[33m\033[0m\n");
     debug("\n\033[;32mTest function of create menu:\033[0m\n");
     tMenu *createMenu = CreateMenu();
     if(createMenu == NULL)
@@ -85,7 +90,7 @@ int main()
     }
     else
     {
-        debug("\nCreate menu success~\n");
+        debug("\nCreate menu success\n");
         result[i] = "Pass";
         returnResult[i++]  = 0;
     }
